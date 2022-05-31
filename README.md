@@ -1,2 +1,3 @@
 # Picture-to-Character-Painting
-图片转字符画
+
+基于 PIL 与 tkinter 的图片转字符画
