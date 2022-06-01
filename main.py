@@ -4,7 +4,7 @@ import tkinter
 import tkinter.filedialog as fd
 
 """
-@Description: 根据图像生成字符画
+@Description: 字符画生成
 @Date:2022/05/31 17:10:15
 @Author: Alex_McAvoy
 """
@@ -21,7 +21,7 @@ class App(object):
     """
     def createdWindow(self):
         window = tkinter.Tk()
-        window.title("文本生成")
+        window.title("字符画绘制v1.0 @Alex_McAvoy")
         # window.geometry("450x300")
 
         input_frame = tkinter.Frame(window)
