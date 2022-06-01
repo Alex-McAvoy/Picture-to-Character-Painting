@@ -9,8 +9,8 @@ import tkinter.filedialog as fd
 @Author: Alex_McAvoy
 """
 class App(object):
-    choose_path = ''  # 选择的文件
-    generate_path = '' # 生成的文件
+    choose_path = ""  # 选择的文件
+    generate_path = "" # 生成的文件
 
     """
     @Description: 生成应用窗口
@@ -25,12 +25,27 @@ class App(object):
         # window.geometry("450x300")
 
         input_frame = tkinter.Frame(window)
-        # 输入提示
-        input_label = tkinter.Label(input_frame, text="请输入绘画所用字符(两到三个)：", justify=tkinter.LEFT)
-        input_label.grid(row=1, column=0)
-        # 输入
-        input = tkinter.Entry(input_frame, bd=4)
-        input.grid(row=1, column=1)
+        # 字符输入提示
+        input_str_label = tkinter.Label(input_frame, text="请输入绘画所用字符(两到三个)：", justify=tkinter.LEFT)
+        input_str_label.grid(row=1, column=0)
+        # 字符输入
+        input_str = tkinter.Entry(input_frame, bd=4)
+        input_str.grid(row=1, column=1)
+
+        # 宽度输入提示
+        input_w_label = tkinter.Label(input_frame,text="请输入生成字符画的宽度(整数)：",justify=tkinter.LEFT)
+        input_w_label.grid(row=2,column=0)
+        # 宽度输入
+        input_w = tkinter.Entry(input_frame,bd=4)
+        input_w.grid(row=2,column=1)
+
+        # 高度输入提示
+        input_h_label = tkinter.Label(input_frame,text="请输入生成字符画的高度(整数)：",justify=tkinter.LEFT)
+        input_h_label.grid(row=3,column=0)
+        # 高度输入
+        input_h = tkinter.Entry(input_frame,bd=4)
+        input_h.grid(row=3,column=1)
+
         input_frame.grid(row=1, column=0, padx=1, pady=1)
         
 
@@ -48,7 +63,7 @@ class App(object):
         select.grid(row=3, column=1)
 
         # 开始转换按钮
-        start = tkinter.Button(choose_frame, text="转换", command=lambda: self.generatePicture(input, tip_label))
+        start = tkinter.Button(choose_frame, text="转换", command=lambda: self.generatePicture(input_str, input_w, input_h, tip_label))
         start.grid(row=3, column=7)
 
         choose_frame.grid(row=2, column=0, padx=10, pady=10)
@@ -77,30 +92,37 @@ class App(object):
     @Params: input 输入内容, tip_label 输入字符提示
     @Return: NULL
     """
-    def generatePicture(self,input,tip_label):
-        str = list(input.get())
-        str_len = len(str)
-        if str_len<2 or str_len>3:
-            tip_label["text"] = "请正确输入用来绘画的字符"
+    def generatePicture(self,input_str, input_w, input_h,tip_label):
+        str = list(input_str.get()) # 绘画字符
+        w = input_w.get() # 字符画宽度
+        h = input_h.get() # 字符画高度
+
+        if self.choose_path == "":
+            tip_label["text"] = "请选择图片！"
             return
-        if str_len==2 or str_len==3:
-            tip_label["text"] = "正在生成..."
+
+        if len(str)<2 or len(str)>3:
+            tip_label["text"] = "请正确输入用来绘画的字符！"
+            return
+
+        if not w.isdigit():
+            tip_label["text"] = "请正确输入生成字符画的宽度！"
+            return
+
+        if not h.isdigit():
+            tip_label["text"] = "请正确输入生成字符画的高度！"
+            return
+
         print("---------------")
         print("正在生成...")
 
         img = Image.open(self.choose_path)
-        w, h = img.size
-        w_s = int(w/20)  # 长宽缩小20倍
-        h_s = int(h/20)  # 长宽缩小20倍
-        img = img.resize((w_s, h_s),Image.ANTIALIAS)
-        blank = (w_s - h_s)/2
-        img = img.crop((0, -blank, w_s, w_s-blank))
-
+        img = img.resize((int(w), int(h)),Image.ANTIALIAS)
         image = img.convert('L')
         image = np.array(image)
 
         # 两个字符
-        if str_len == 2:
+        if len(str) == 2:
             with open(self.generate_path, 'w') as f:
                 for i in range(int(len(image))):
                     for j in range(int(len(image[0]))):
@@ -109,7 +131,6 @@ class App(object):
                         else:
                             f.write(str[1])
                     f.write("\n")
-        
         
         # 三个字符
         if len(str) == 3:
