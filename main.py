@@ -22,7 +22,7 @@ class App(object):
     def createdWindow(self):
         window = tkinter.Tk()
         window.title("字符画绘制v1.0 @Alex_McAvoy")
-        # window.geometry("450x300")
+        window.geometry("350x190")
 
         input_frame = tkinter.Frame(window)
         # 字符输入提示
